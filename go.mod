@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/cometbft/cometbft v0.38.17
-	// github.com/airchains-network/junction v0.0.0-00010101000000-000000000000
+	github.com/airchains-network/junction v0.3.1 
 	github.com/cosmos/cosmos-sdk v0.50.12
 	github.com/ignite/cli/v28 v28.8.0
 	go.dedis.ch/kyber/v3 v3.1.0
@@ -158,3 +158,5 @@ require (
 	pgregory.net/rapid v1.1.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
+
+replace github.com/airchains-network/junction => ../junction
