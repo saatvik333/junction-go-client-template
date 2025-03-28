@@ -1,12 +1,13 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/ignite/cli/v28/ignite/pkg/cosmosaccount"
 	"github.com/ignite/cli/v28/ignite/pkg/cosmosclient"
-	"encoding/json"	
-	"os"
+	// "go.uber.org/zap"
 )
 
 // AccountData stores account connection data.
@@ -16,12 +17,24 @@ type AccountData struct {
 	Client  cosmosclient.Client
 }
 
+// Ensure logger is initialized
+func ensureLogger() {
+	if Log == nil {
+		InitLogger()
+	}
+}
 
-func CheckIfAccountExists(accountName string, client cosmosclient.Client, addressPrefix string, accountPath string) (bool, string) {
+// Helper function to log errors consistently
+func logError(msg string, err error) {
+	ensureLogger()
+	Log.Error(fmt.Sprintf("%s: %v", msg, err))
+}
 
+// CheckIfAccountExists verifies if an account exists in the registry
+func CheckIfAccountExists(accountName, accountPath, addressPrefix string) (bool, string) {
 	registry, err := cosmosaccount.New(cosmosaccount.WithHome(accountPath))
 	if err != nil {
-		fmt.Println(err)
+		logError("Failed to create account registry", err)
 		return false, ""
 	}
 
@@ -32,101 +45,101 @@ func CheckIfAccountExists(accountName string, client cosmosclient.Client, addres
 
 	addr, err := account.Address(addressPrefix)
 	if err != nil {
-		fmt.Println("Failed to get the Address:", err)
+		logError("Failed to retrieve account address", err)
 		return false, ""
 	}
 
 	return true, addr
 }
 
-func FetchAccount(accountName string, client cosmosclient.Client, addressPrefix string, accountPath string) (account cosmosaccount.Account, addr string, err error) {
-	isExist, _ := CheckIfAccountExists(accountName, client, addressPrefix, accountPath)
-	if isExist {
-		registry, err := cosmosaccount.New(cosmosaccount.WithHome(accountPath))
-		if err != nil {
-			fmt.Println(err)
-			return cosmosaccount.Account{}, "", err
-		}
-
-		account, err := registry.GetByName(accountName)
-		if err != nil {
-			return cosmosaccount.Account{}, "", err
-		}
-
-		addr, err := account.Address(addressPrefix)
-		if err != nil {
-			fmt.Println("Failed to get the Address:", err)
-			return cosmosaccount.Account{}, "", err
-		}
-
-		return account, addr, nil
-	} else {
+// FetchAccount retrieves an existing account by name
+func FetchAccount(accountName, accountPath, addressPrefix string) (cosmosaccount.Account, string, error) {
+	exists, _ := CheckIfAccountExists(accountName, accountPath, addressPrefix)
+	if !exists {
 		return cosmosaccount.Account{}, "", fmt.Errorf("account not found")
 	}
-}
-
-
-func CreateAccount(accountName string, accountPath string) {
 
 	registry, err := cosmosaccount.New(cosmosaccount.WithHome(accountPath))
 	if err != nil {
-		Log.Error(fmt.Sprintf("Error creating account registry: %v", err))
+		logError("Failed to create account registry", err)
+		return cosmosaccount.Account{}, "", err
+	}
+
+	account, err := registry.GetByName(accountName)
+	if err != nil {
+		logError("Failed to retrieve account", err)
+		return cosmosaccount.Account{}, "", err
+	}
+
+	addr, err := account.Address(addressPrefix)
+	if err != nil {
+		logError("Failed to retrieve account address", err)
+		return cosmosaccount.Account{}, "", err
+	}
+
+	return account, addr, nil
+}
+
+// CreateAccount generates a new Cosmos account and saves its details to a file
+func CreateAccount(accountName, accountPath string) {
+	ensureLogger()
+
+	registry, err := cosmosaccount.New(cosmosaccount.WithHome(accountPath))
+	if err != nil {
+		logError("Error creating account registry", err)
 		return
 	}
 
 	account, mnemonic, err := registry.Create(accountName)
 	if err != nil {
-		Log.Error(fmt.Sprintf("Error creating account: %v", err))
+		logError("Error creating account", err)
 		return
 	}
 
-	newCreatedAccount, err := registry.GetByName(accountName)
+	newAccount, err := registry.GetByName(accountName)
 	if err != nil {
-		Log.Error(fmt.Sprintf("Error getting account: %v", err))
+		logError("Error retrieving account", err)
 		return
 	}
 
-	newCreatedAccountAddr, err := newCreatedAccount.Address("air")
+	newAccountAddr, err := newAccount.Address("air")
 	if err != nil {
-		Log.Error(fmt.Sprintf("Error getting address: %v", err))
+		logError("Error retrieving account address", err)
 		return
 	}
 
-	// create "account.Name".wallet.json file
-	type AccountDetails struct {
-		Name       string `json:"name"`
-		Mnemonic   string `json:"mnemonic"`
-		NewAddress string `json:"address"`
+	accountDetails := struct {
+		Name     string `json:"name"`
+		Mnemonic string `json:"mnemonic"`
+		Address  string `json:"address"`
+	}{
+		Name:     accountName,
+		Mnemonic: mnemonic,
+		Address:  newAccountAddr,
 	}
-	acc := AccountDetails{
-		Name:       accountName,
-		Mnemonic:   mnemonic,
-		NewAddress: newCreatedAccountAddr,
-	}
-	accountBytes, err := json.Marshal(acc)
+
+	accountBytes, err := json.Marshal(accountDetails)
 	if err != nil {
-		Log.Error(fmt.Sprintf("Failed to marshal account details: %s\n", err))
+		logError("Failed to marshal account details", err)
 		return
 	}
+
 	fileName := fmt.Sprintf("%s/%s.wallet.json", accountPath, accountName)
-	// Create and write the file.
 	file, err := os.Create(fileName)
 	if err != nil {
-		Log.Error(fmt.Sprintf("Failed creating file: %s\n", err))
+		logError("Failed to create wallet file", err)
 		return
 	}
 	defer file.Close()
-	_, err = file.Write(accountBytes)
-	if err != nil {
-		Log.Error(fmt.Sprintf("Failed writing to file: %s\n", err))
+
+	if _, err = file.Write(accountBytes); err != nil {
+		logError("Failed writing to wallet file", err)
 		return
 	}
-	Log.Info("File written successfully:" + fileName)
 
-	Log.Info(fmt.Sprintf("Account created: %s", account.Name))
+	Log.Info(fmt.Sprintf("Account created successfully: %s", account.Name))
 	Log.Info(fmt.Sprintf("Mnemonic: %s", mnemonic))
-	Log.Info(fmt.Sprintf("Address: %s", newCreatedAccountAddr))
-	Log.Info("Please save this mnemonic key for account recovery")
-	Log.Info("Please save this address for future reference")
-
+	Log.Info(fmt.Sprintf("Address: %s", newAccountAddr))
+	Log.Info(fmt.Sprintf("Wallet file saved at: %s", fileName))
+	Log.Info("Save this mnemonic key securely for account recovery.")
 }

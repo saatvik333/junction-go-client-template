@@ -6,10 +6,18 @@ import (
 
 var Log *zap.Logger
 
+// InitLogger initializes the global logger
 func InitLogger() {
-	var err error
-	Log, err = zap.NewProduction() // You can use zap.NewDevelopment() for a development-friendly logger
-	if err != nil {
-		panic(err)
+	if Log != nil {
+		return // Avoid re-initialization if already set
 	}
+
+	var err error
+	Log, err = zap.NewProduction() // Use zap.NewDevelopment() for development
+	if err != nil {
+		panic("Failed to initialize logger: " + err.Error())
+	}
+
+	// Ensure logs are properly flushed on program exit
+	defer Log.Sync()
 }

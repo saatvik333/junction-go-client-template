@@ -17,20 +17,18 @@ func main() {
 		AccountNames: []string{
 			"account1",
 			"account2",
-			"account3",
-			"account4",
+			
 		},
 		AccountAddresses: []string{
-			"air1mue344jmwztfgpjsf2v34utwtgpjqv00yzv5kz",
-			"air1xgj29fgn22wuy0hpm8jy64k3z5setpwtdmec77",
-			"air1w2c7dujdatxvupp7qy4x5wcsk295alher9059g",
-			"air1w3w9eq0l47cx4xk8erz3hz4zstpyfhql06532y",
+			"air1cxfn6mrqz98h0rkq8pkxg47jf33e5jhh093pjq",
+			"air160kc8z27qhx8ef4aagd0usf63h5mz952qklfen",
+			
 		},
 	}
 
 	setupAccounts(config)
 	checkBalances(config)
-	// accountsData := connectAllClients(config)
+	 //accountsData := connectAllClients(config)
 
 
 }
