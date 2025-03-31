@@ -43,13 +43,12 @@ func main() {
 		fmt.Println(err)
 	}
 
-	time.Sleep(2 * time.Second)
+	time.Sleep(20 * time.Second)
 
-	ProverTxHash, err := src.InitProver()
+	_, err = src.InitProver()
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Proverhash", ProverTxHash)
 }
 
 // setupAccounts creates accounts using the provided configuration.

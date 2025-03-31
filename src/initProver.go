@@ -64,5 +64,6 @@ func InitProver() (string, error) {
 
 	utils.Logger.Info("Rollup Prover Initialized, Transaction Hash:" + txResp.TxHash)
 	utils.Logger.Info("http://localhost:26657/tx?hash=0x" + txResp.TxHash)
+	utils.Logger.Success("http://localhost:1317/airchains-network/junction/rollup/get_rollup_info/" + string(rollupId))
 	return txResp.TxHash, nil
 }

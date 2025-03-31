@@ -39,7 +39,7 @@ func InitRollup() (string, error) {
 	// Create MsgInitRollup
 	rollupMsg := &types.MsgInitRollup{
 		Creator:                creator,
-		Moniker:                "testing chain 11",
+		Moniker:                "testing chain 1",
 		ChainId:                chain_id,
 		DenomName:              "airtoken",
 		Keys:                   keys,
@@ -90,6 +90,6 @@ func InitRollup() (string, error) {
 		os.WriteFile("data/rollupId.txt", []byte(rollupId), 0644)
 	}
 	
-	utils.Logger.Info("Rollup ID: " + rollupId)
+	utils.Logger.Success("http://localhost:1317/airchains-network/junction/rollup/get_rollup_info/" + rollupId)
 	return txResp.TxHash, nil
 }
