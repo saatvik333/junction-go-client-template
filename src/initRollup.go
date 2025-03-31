@@ -62,6 +62,6 @@ func InitRollup() (string, error) {
 		return "", err
 	}
 
-	fmt.Println("Rollup created successfully"+ "Txhash"+txResp.TxHash)
+	fmt.Println("Rollup created successfully"+ "Txhash "+txResp.TxHash)
 	return txResp.TxHash, nil
 }
