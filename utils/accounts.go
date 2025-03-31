@@ -19,12 +19,6 @@ type AccountData struct {
 	Client  cosmosclient.Client
 }
 
-// Ensure logger is initialized
-// func ensureLogger() {
-// 	if Logger == nil {
-// 		InitLogger()
-// 	}
-// }
 
 // Helper function to log errors consistently
 func logError(msg string, err error) {

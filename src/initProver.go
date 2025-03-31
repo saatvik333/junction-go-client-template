@@ -7,6 +7,7 @@ import (
 	"os"
 
 	types "github.com/airchains-network/junction/x/rollup/types"
+	"github.com/saatvik333/junction-go-client-template/utils"
 
 	// "github.com/ignite/cli/v28/ignite/pkg/cosmosaccount"
 	"github.com/ignite/cli/v28/ignite/pkg/cosmosclient"
@@ -61,6 +62,7 @@ func InitProver() (string, error) {
 		return "", err
 	}
 
-	fmt.Println("Proved " + txResp.TxHash)
+	utils.Logger.Info("Rollup Prover Initialized, Transaction Hash:" + txResp.TxHash)
+	utils.Logger.Info("http://localhost:26657/tx?hash=0x" + txResp.TxHash)
 	return txResp.TxHash, nil
 }

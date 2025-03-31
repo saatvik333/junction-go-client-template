@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/saatvik333/junction-go-client-template/src"
 	"github.com/saatvik333/junction-go-client-template/utils"
@@ -37,10 +38,12 @@ func main() {
 
 	}
 	checkBalances(config)
-	// _ , err := src.InitRollup()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+	_, err := src.InitRollup()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	time.Sleep(2 * time.Second)
 
 	ProverTxHash, err := src.InitProver()
 	if err != nil {

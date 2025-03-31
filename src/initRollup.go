@@ -34,7 +34,7 @@ func InitRollup() (string, error) {
 
 	// utils.Logger.Info("Initializing Rollup...")
 	creator, _ := account.Address("air")
-	fmt.Println(creator)
+	utils.Logger.Info("Initializing Rollup...")
 
 	// Create MsgInitRollup
 	rollupMsg := &types.MsgInitRollup{
@@ -61,8 +61,8 @@ func InitRollup() (string, error) {
 		return "", err
 	}
 
-	fmt.Println("Rollup created successfully" + "Txhash " + txResp.TxHash)
-	fmt.Println("http://localhost:26657/tx?hash=0x" + txResp.TxHash)
+	utils.Logger.Info("Rollup created successfully" + "Txhash " + txResp.TxHash)
+	utils.Logger.Info("http://localhost:26657/tx?hash=0x" + txResp.TxHash)
 
 	rollupId := ""
 	found := false
@@ -89,7 +89,7 @@ func InitRollup() (string, error) {
 		os.Create("data/rollupId.txt")
 		os.WriteFile("data/rollupId.txt", []byte(rollupId), 0644)
 	}
-
-	fmt.Println("Rollup ID: " + rollupId)
+	
+	utils.Logger.Info("Rollup ID: " + rollupId)
 	return txResp.TxHash, nil
 }

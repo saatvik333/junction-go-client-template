@@ -50,6 +50,10 @@ github.com/99designs/keyring v1.2.2 h1:pZd3neh/EmUzWONb35LxQfvuY7kiSXAq3HQd97+XB
 github.com/99designs/keyring v1.2.2/go.mod h1:wes/FrByc8j7lFOAGLGSNEg8f/PaI3cgTBqhFkHUrPk=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
+github.com/ComputerKeeda/sslogger v1.0.0 h1:Li6XJEYvwJWdJ0rCG9xJiIFZuCjM8UsvCCJr/g5dxr4=
+github.com/ComputerKeeda/sslogger v1.0.0/go.mod h1:EJlnfS0EuZ9EMi0Y3h8ZfjselustL9KjHisUBRDnthY=
+github.com/ComputerKeeda/sslogger/v2 v2.0.2 h1:/qd2v7U8y+fv9BMBPmmjOiu4dgQwwWhOgIeTBuLf9Ks=
+github.com/ComputerKeeda/sslogger/v2 v2.0.2/go.mod h1:RaOjabN3+s0BFuJt19Tfh/xERpzGf8dBA/Aree9xp5c=
 github.com/DataDog/datadog-go v3.2.0+incompatible h1:qSG2N4FghB1He/r2mFrWKCaL7dXCilEuNEeAn20fdD4=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/DataDog/zstd v1.5.5 h1:oWf5W7GtOLgp6bciQYDmhHHjdhYkALu6S/5Ni9ZgSvQ=
