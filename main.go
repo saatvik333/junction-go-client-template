@@ -44,11 +44,16 @@ func main() {
 //   }
 //   fmt.Println("Txhash",Txhash)
 
-  ProverTxHash ,err := src.InitProver()
+//   ProverTxHash ,err := src.InitProver()
+//   if err!= nil {
+// 	fmt.Println(err)
+//   }
+//   fmt.Println("Proverhash",ProverTxHash)
+  batchTxHash ,err := src.MsgSubmitBatch()
   if err!= nil {
 	fmt.Println(err)
   }
-  fmt.Println("Proverhash",ProverTxHash)
+  fmt.Println("Proverhash",batchTxHash)
 }
 
 
