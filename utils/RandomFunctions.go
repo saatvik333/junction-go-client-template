@@ -9,7 +9,7 @@ import (
 )
 
 
-func Monikergenerate() string {
+func ChainIdgenerate() string {
 	var letters = []rune("abcdefghijklmnopqrstuvwxyz") // Available characters for the random word.
 	moniker := make([]rune, 5)
 

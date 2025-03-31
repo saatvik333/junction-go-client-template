@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/saatvik333/junction-go-client-template/junction"
-	"github.com/saatvik333/junction-go-client-template/utils"
 	"log"
+
+	"github.com/saatvik333/junction-go-client-template/src"
+	"github.com/saatvik333/junction-go-client-template/utils"
 )
 
 func main() {
@@ -20,27 +21,46 @@ func main() {
 			
 		},
 		AccountAddresses: []string{
-			"air1cxfn6mrqz98h0rkq8pkxg47jf33e5jhh093pjq",
-			"air160kc8z27qhx8ef4aagd0usf63h5mz952qklfen",
+			"air1vk4490xlxtz20lcrhzvwvku3hxun6gwmz4pr0y",
+			// "air1g0xze04mljvf64xwrkxmvmcqs9pu245y5fh7rv",
 			
 		},
 	}
 
-	setupAccounts(config)
-	checkBalances(config)
+	 //setupAccounts(config)
+	 //checkBalances(config)
 	 //accountsData := connectAllClients(config)
+	 if len(config.AccountAddresses) == 0 || len(config.AccountAddresses) == 1  {
+		setupAccounts(config)
+	} else {
+		// 
+		return
 
-
+	}
+	checkBalances(config)
+  Txhash,err :=	src.InitRollup()
+  if err!= nil{
+	fmt.Println(err)
+  }
+  fmt.Println("Txhash",Txhash)
 }
+
+
 
 // setupAccounts creates accounts using the provided configuration.
 func setupAccounts(cfg utils.Config) {
 	for _, name := range cfg.AccountNames {
-		utils.CreateAccount(name, cfg.AccountPath)
-		log.Printf("Failed to create account %s:", name)
+		exists, _ := utils.CheckIfAccountExists(name, cfg.AccountPath, cfg.ChainPrefix)
+		if exists {
+			log.Printf("Account %s already exists. Skipping creation.", name)
+			continue
+		}
 
+		utils.CreateAccount(name, cfg.AccountPath) // Simply call it
 	}
 }
+
+
 
 // checkBalances retrieves and logs the balance of each account.
 func checkBalances(cfg utils.Config) {
@@ -54,20 +74,20 @@ func checkBalances(cfg utils.Config) {
 			log.Printf("Failed to retrieve balance for %s", addr)
 			continue
 		}
-		utils.Log.Info(fmt.Sprintf("%s balance: %d", addr, balance))
+		log.Printf("%s balance: %d", addr, balance)
 	}
 }
 
-// connectAllClients connects to all accounts and returns their connection data.
-func connectAllClients(cfg utils.Config) []utils.AccountData {
-	var accountsData []utils.AccountData
-	for _, name := range cfg.AccountNames {
-		account, addr, client := junction.ClientConnect(cfg.AccountPath, name, cfg.ChainPrefix, cfg.JsonRPC)
-		accountsData = append(accountsData, utils.AccountData{
-			Account: account,
-			Addr:    addr,
-			Client:  client,
-		})
-	}
-	return accountsData
-}
+// // connectAllClients connects to all accounts and returns their connection data.
+// func connectAllClients(cfg utils.Config) []utils.AccountData {
+// 	var accountsData []utils.AccountData
+// 	for _, name := range cfg.AccountNames {
+// 		account, addr, client := junction.ClientConnect(cfg.AccountPath, name, cfg.ChainPrefix, cfg.JsonRPC)
+// 		accountsData = append(accountsData, utils.AccountData{
+// 			Account: account,
+// 			Addr:    addr,
+// 			Client:  client,
+// 		})
+// 	}
+// 	return accountsData
+// }

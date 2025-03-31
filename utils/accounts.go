@@ -8,6 +8,8 @@ import (
 	"github.com/ignite/cli/v28/ignite/pkg/cosmosaccount"
 	"github.com/ignite/cli/v28/ignite/pkg/cosmosclient"
 	// "go.uber.org/zap"
+
+	
 )
 
 // AccountData stores account connection data.
@@ -18,16 +20,16 @@ type AccountData struct {
 }
 
 // Ensure logger is initialized
-func ensureLogger() {
-	if Log == nil {
-		InitLogger()
-	}
-}
+// func ensureLogger() {
+// 	if Logger == nil {
+// 		InitLogger()
+// 	}
+// }
 
 // Helper function to log errors consistently
 func logError(msg string, err error) {
-	ensureLogger()
-	Log.Error(fmt.Sprintf("%s: %v", msg, err))
+	// ensureLogger()
+	fmt.Sprintf("%s: %v", msg, err)
 }
 
 // CheckIfAccountExists verifies if an account exists in the registry
@@ -82,7 +84,7 @@ func FetchAccount(accountName, accountPath, addressPrefix string) (cosmosaccount
 
 // CreateAccount generates a new Cosmos account and saves its details to a file
 func CreateAccount(accountName, accountPath string) {
-	ensureLogger()
+	// ensureLogger()
 
 	registry, err := cosmosaccount.New(cosmosaccount.WithHome(accountPath))
 	if err != nil {
@@ -137,9 +139,9 @@ func CreateAccount(accountName, accountPath string) {
 		return
 	}
 
-	Log.Info(fmt.Sprintf("Account created successfully: %s", account.Name))
-	Log.Info(fmt.Sprintf("Mnemonic: %s", mnemonic))
-	Log.Info(fmt.Sprintf("Address: %s", newAccountAddr))
-	Log.Info(fmt.Sprintf("Wallet file saved at: %s", fileName))
-	Log.Info("Save this mnemonic key securely for account recovery.")
+	fmt.Printf("Account created successfully: %s", account.Name)
+	fmt.Printf("Mnemonic: %s", mnemonic)
+	fmt.Printf("Address: %s", newAccountAddr)
+	fmt.Printf("Wallet file saved at: %s", fileName)
+	fmt.Println("Save this mnemonic key securely for account recovery.")
 }
