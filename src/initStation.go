@@ -1,4 +1,4 @@
-package junction
+package src
 
 // "github.com/airchains-network/junction/x/zksequencer/types"
 
