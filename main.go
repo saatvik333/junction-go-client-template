@@ -38,11 +38,17 @@ func main() {
 
 	}
 	checkBalances(config)
-  Txhash,err :=	src.InitRollup()
-  if err!= nil{
+//   Txhash,err :=	src.InitRollup()
+//   if err!= nil{
+// 	fmt.Println(err)
+//   }
+//   fmt.Println("Txhash",Txhash)
+
+  ProverTxHash ,err := src.InitProver()
+  if err!= nil {
 	fmt.Println(err)
   }
-  fmt.Println("Txhash",Txhash)
+  fmt.Println("Proverhash",ProverTxHash)
 }
 
 

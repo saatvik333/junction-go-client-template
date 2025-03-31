@@ -40,7 +40,7 @@ func InitRollup() (string, error) {
 	// Create MsgInitRollup
 	rollupMsg := &types.MsgInitRollup{
 		Creator:               creator,
-		Moniker:               "testchain3",
+		Moniker:               "testchain4",
 		ChainId:               chain_id,
 		DenomName:             "airtoken",
 		Keys:                  keys,
