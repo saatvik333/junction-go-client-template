@@ -8,7 +8,6 @@ require (
 	github.com/cosmos/cosmos-sdk v0.50.12
 	github.com/ignite/cli/v28 v28.8.0
 	go.dedis.ch/kyber/v3 v3.1.0
-	go.uber.org/zap v1.27.0
 )
 
 require (

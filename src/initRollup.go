@@ -3,6 +3,7 @@ package src
 import (
 	"context"
 	"fmt"
+	"os"
 
 	types "github.com/airchains-network/junction/x/rollup/types"
 	"github.com/saatvik333/junction-go-client-template/utils"
@@ -21,31 +22,29 @@ func InitRollup() (string, error) {
 	}
 
 	// Get account from keyring
-	account, err := client.Account("alice") 
+	account, err := client.Account("alice")
 	if err != nil {
 		fmt.Print(err)
 		return "", err
 	}
 	// var accountAddress = account.Address()
 	chain_id := utils.ChainIdgenerate()
-	da:= utils.DaGen()
+	da := utils.DaGen()
 	keys, supply := utils.KeysGenerateAndSupply(3)
-	fmt.Print(keys)
 
 	// utils.Logger.Info("Initializing Rollup...")
-	creator,_ := account.Address("air")
+	creator, _ := account.Address("air")
 	fmt.Println(creator)
-
 
 	// Create MsgInitRollup
 	rollupMsg := &types.MsgInitRollup{
-		Creator:               creator,
-		Moniker:               "testchain4",
-		ChainId:               chain_id,
-		DenomName:             "airtoken",
-		Keys:                  keys,
-		Supply:                supply,
-		DaType:               	da,
+		Creator:                creator,
+		Moniker:                "testing chain 11",
+		ChainId:                chain_id,
+		DenomName:              "airtoken",
+		Keys:                   keys,
+		Supply:                 supply,
+		DaType:                 da,
 		AclContractAddress:     "0x33c0B106c459d86841E96D58Db211Ae8554132d2",
 		KmsVerifierAddress:     "0x61d1Ee49A472844985d7a8abd0FD482111de3389",
 		TfheExecutorAddress:    "0x16054AEeDb074108193A3C074eb5e5B411577CD5",
@@ -62,6 +61,35 @@ func InitRollup() (string, error) {
 		return "", err
 	}
 
-	fmt.Println("Rollup created successfully"+ "Txhash "+txResp.TxHash)
+	fmt.Println("Rollup created successfully" + "Txhash " + txResp.TxHash)
+	fmt.Println("http://localhost:26657/tx?hash=0x" + txResp.TxHash)
+
+	rollupId := ""
+	found := false
+	for _, event := range txResp.Events {
+		if event.Type == "rollup-initialized" {
+			for _, attr := range event.Attributes {
+				if attr.Key == "rollup-id" {
+					rollupId = attr.Value
+					found = true
+				}
+			}
+		}
+	}
+
+	if !found {
+		return "", fmt.Errorf("rollup ID not found but the attribute value exists")
+	} else {
+		if _, err := os.Stat("data"); os.IsNotExist(err) {
+			err := os.Mkdir("data", 0755)
+			if err != nil {
+				return "", fmt.Errorf("failed to create data directory: %w", err)
+			}
+		}
+		os.Create("data/rollupId.txt")
+		os.WriteFile("data/rollupId.txt", []byte(rollupId), 0644)
+	}
+
+	fmt.Println("Rollup ID: " + rollupId)
 	return txResp.TxHash, nil
 }

@@ -18,40 +18,36 @@ func main() {
 		AccountNames: []string{
 			"account1",
 			"account2",
-			
 		},
 		AccountAddresses: []string{
 			"air1vk4490xlxtz20lcrhzvwvku3hxun6gwmz4pr0y",
 			// "air1g0xze04mljvf64xwrkxmvmcqs9pu245y5fh7rv",
-			
+
 		},
 	}
 
-	 //setupAccounts(config)
-	 //checkBalances(config)
-	 //accountsData := connectAllClients(config)
-	 if len(config.AccountAddresses) == 0 || len(config.AccountAddresses) == 1  {
+	//setupAccounts(config)
+	//checkBalances(config)
+	//accountsData := connectAllClients(config)
+	if len(config.AccountAddresses) == 0 || len(config.AccountAddresses) == 1 {
 		setupAccounts(config)
 	} else {
-		// 
+		//
 		return
 
 	}
 	checkBalances(config)
-//   Txhash,err :=	src.InitRollup()
-//   if err!= nil{
-// 	fmt.Println(err)
-//   }
-//   fmt.Println("Txhash",Txhash)
+	// _ , err := src.InitRollup()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-  ProverTxHash ,err := src.InitProver()
-  if err!= nil {
-	fmt.Println(err)
-  }
-  fmt.Println("Proverhash",ProverTxHash)
+	ProverTxHash, err := src.InitProver()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Proverhash", ProverTxHash)
 }
-
-
 
 // setupAccounts creates accounts using the provided configuration.
 func setupAccounts(cfg utils.Config) {
@@ -65,8 +61,6 @@ func setupAccounts(cfg utils.Config) {
 		utils.CreateAccount(name, cfg.AccountPath) // Simply call it
 	}
 }
-
-
 
 // checkBalances retrieves and logs the balance of each account.
 func checkBalances(cfg utils.Config) {
